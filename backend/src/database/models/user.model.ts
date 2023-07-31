@@ -4,7 +4,7 @@ import {
 	Column, 
 	Model, 
 	DataType,
-	HasMany 
+	HasMany,
 } from 'sequelize-typescript';
 import { Contact } from './contact.model';
 
@@ -42,6 +42,6 @@ export class User extends Model<User> {
 	})
   password!: string;
 
-	@HasMany(() => Contact, 'userId')
-  contacts!: Contact[];
+	@HasMany(() => Contact)
+  contacts: Contact[];
 }

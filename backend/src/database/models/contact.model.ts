@@ -5,6 +5,7 @@ import {
 	DataType,
 	ForeignKey,
 	BelongsTo,
+	PrimaryKey,
 } from 'sequelize-typescript';
 import { User } from './user.model';
 
@@ -15,11 +16,12 @@ import { User } from './user.model';
 })
 
 export class Contact extends Model<Contact> {
+	@PrimaryKey
 	@Column({
-		primaryKey: true,
+		type: DataType.INTEGER,
 		autoIncrement: true,
 	})
-	id!: number;
+  id!: number;
 
 	@ForeignKey(() => User)
 	@Column({
@@ -28,12 +30,19 @@ export class Contact extends Model<Contact> {
 	})
 	userId!: number;
 
-	@BelongsTo(() => User, 'id')
+	@BelongsTo(() => User)
   user!: User;
 
 	@Column({
-		type: DataType.INTEGER,
+		type: DataType.STRING,
 		allowNull: false,
 	})
-	contactId!: number;
+	contactName!: string;
+
+	@Column({
+		type: DataType.STRING,
+		allowNull: false,
+		unique: true,
+	})
+	email!: string;
 }
