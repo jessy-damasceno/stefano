@@ -4,14 +4,31 @@ import statusCodes from "../utils/statusCodes";
 import tokenGenerator from "../utils/generateToken";
 import { User } from "../database/models/user.model";
 
-const hashPassword = async (password: string): Promise<string> =>
+export const hashPassword = async (password: string): Promise<string> =>
   bcrypt.hash(password, bcrypt.genSaltSync(8));
 
-export const login = async (req: Request, res: Response) => {
-  const { email } = req.body;
-  const token = tokenGenerator(email as string);
+export const login = async (req: Request, res: Response, next: NextFunction) => {
+  const { email, password } = req.body;
 
-  return res.status(statusCodes.ok).json({ token });
+  const user = await User.findOne({ where: { email } });
+
+  if (!user) {
+    return next({
+      type: 'UNAUTHORIZED_USER',
+      message: "Invalid e-mail or password",
+    });
+  };
+  
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+
+  if (!isPasswordValid) return next({
+    type: 'UNAUTHORIZED_USER',
+    message: "Invalid e-mail or password",
+  });
+  
+  return res.status(statusCodes.ok).json({
+    token: tokenGenerator(email as string),
+  });
 };
 
 export const getUser = async (req: Request, res: Response) => {
