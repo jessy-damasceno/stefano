@@ -32,8 +32,12 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Demo Imports
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustration'
+import { createUserRequest } from 'src/requests/users.request'
+import { useRouter } from 'next/router'
 
 interface State {
+  username: string
+  email: string
   password: string
   showPassword: boolean
 }
@@ -60,7 +64,10 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
 
 const RegisterPage = () => {
   // ** States
+  const [isDisabled, setDisabled] = useState<boolean>(true);
   const [values, setValues] = useState<State>({
+    username: '',
+    email: '',
     password: '',
     showPassword: false
   })
@@ -68,14 +75,62 @@ const RegisterPage = () => {
   // ** Hook
   const theme = useTheme()
 
-  const handleChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value })
+  const router = useRouter()
+
+  const resetStates = () => {
+    setValues({
+      username: '',
+      email: '',
+      password: '',
+      showPassword: false
+    });
+    setDisabled(true);
   }
+
+  const handleChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
+    const newValues = { ...values, [prop]: event.target.value };
+
+    setValues(newValues);
+    setDisabled(validateFields(newValues));
+  }
+
   const handleClickShowPassword = () => {
     setValues({ ...values, showPassword: !values.showPassword })
   }
+
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
+  }
+
+  const validateFields = ({ username, email, password }: State) => {
+    const regExp = /\w+@[a-z]+\.com/g;
+
+    return !(
+      email.match(regExp)
+      && password.length >= +'6'
+      && username.length >= +'3'
+      && username.length <= +'64'
+      );
+  };
+
+  const signUp = async () => {
+    const response = await createUserRequest({
+      username: values.username,
+      email: values.email,
+      password: values.password,
+    });
+
+    if (response.status === 200) {
+      localStorage.setItem('user', JSON.stringify({
+        email: values.email,
+        password: values.password,
+      }));
+      alert(response.message);
+      router.push('/');
+    } else {
+      alert(response.message);
+      resetStates();
+    };
   }
 
   return (
@@ -159,11 +214,12 @@ const RegisterPage = () => {
             <Typography variant='body2'>Make your app management easy and fun!</Typography>
           </Box>
           <form noValidate autoComplete='off' onSubmit={e => e.preventDefault()}>
-            <TextField autoFocus fullWidth id='username' label='Username' sx={{ marginBottom: 4 }} />
-            <TextField fullWidth type='email' label='Email' sx={{ marginBottom: 4 }} />
+            <TextField helperText='Between 3 and 64 characters' value={values.username} onChange={handleChange('username')} autoFocus fullWidth id='username' label='Username' sx={{ marginBottom: 4 }} />
+            <TextField helperText='Enter a valid e-mail' value={values.email} onChange={handleChange('email')} fullWidth type='email' label='Email' sx={{ marginBottom: 4 }} />
             <FormControl fullWidth>
               <InputLabel htmlFor='auth-register-password'>Password</InputLabel>
               <OutlinedInput
+                placeholder='Minimum 6 characters'
                 label='Password'
                 value={values.password}
                 id='auth-register-password'
@@ -196,7 +252,7 @@ const RegisterPage = () => {
                 </Fragment>
               }
             />
-            <Button fullWidth size='large' type='submit' variant='contained' sx={{ marginBottom: 7 }}>
+            <Button disabled={isDisabled} onClick={signUp} fullWidth size='large' type='submit' variant='contained' sx={{ marginBottom: 7 }}>
               Sign up
             </Button>
             <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>

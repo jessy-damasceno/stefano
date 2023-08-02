@@ -82,6 +82,7 @@ const LoginPage = () => {
 				const { email, password } = JSON.parse(data);
 				setValues({ ...values, email, password });
         setDisabled(false);
+        setRememberMe(true);
 			};
 		};
 

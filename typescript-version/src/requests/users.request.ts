@@ -6,6 +6,12 @@ interface ILogin {
   password: string;
 }
 
+interface IRegister {
+  username: string;
+  email: string;
+  password: string;
+}
+
 const HOST = process.env.HOST ?? 'http://localhost:3001';
 
 export const loginRequest = async (payload: ILogin) => {
@@ -25,6 +31,29 @@ export const loginRequest = async (payload: ILogin) => {
         status: error.response.status,
         message: error.response.data.message,
         token: null,
+      };
+    });
+
+    return response;
+}
+
+export const createUserRequest = async (payload: IRegister) => {
+  const { username, email, password } = payload;
+
+    const response = await axios.post(
+      `${HOST}/user/`,
+      { username, email, password }
+    ).then((response) => {
+      return {
+        status: response.status,
+        message: 'User created successfully',
+        user: response.data.user,
+      };
+    }).catch((error) => {
+      return {
+        status: error.response.status,
+        message: error.response.data.message,
+        user: null,
       };
     });
 
