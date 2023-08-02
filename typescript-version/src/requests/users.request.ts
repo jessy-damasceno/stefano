@@ -7,8 +7,9 @@ interface ILogin {
 }
 
 interface IUser {
-  username: string;
-  email: string;
+  username?: string;
+  email?: string;
+  password?: string;
 }
 
 interface IRegister {
@@ -90,14 +91,14 @@ export const createUserRequest = async (payload: IRegister) => {
   return response;
 }
 
-export const editUserRequest = async (token: string, { username, email }: IUser) => {
+export const editUserRequest = async (token: string, payload: IUser) => {
   const config = {
     headers: { Authorization: token }
   };
 
   const response = await axios.put(
     `${HOST}/user/`,
-    { username, email },
+    { ...payload },
     config
   ).then((response) => {
     return {

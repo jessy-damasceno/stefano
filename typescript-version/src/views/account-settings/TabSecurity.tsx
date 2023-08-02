@@ -1,5 +1,5 @@
 // ** React Imports
-import { ChangeEvent, MouseEvent, useState } from 'react'
+import { ChangeEvent, MouseEvent, useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -15,6 +15,9 @@ import InputAdornment from '@mui/material/InputAdornment'
 // ** Icons Imports
 import EyeOutline from 'mdi-material-ui/EyeOutline'
 import EyeOffOutline from 'mdi-material-ui/EyeOffOutline'
+import { editUserRequest, getUserRequest } from 'src/requests/users.request'
+import { compareSync } from 'bcryptjs'
+import { useRouter } from 'next/router'
 
 interface State {
   newPassword: string
@@ -34,7 +37,36 @@ const TabSecurity = () => {
     confirmNewPassword: '',
     showCurrentPassword: false,
     showConfirmNewPassword: false
-  })
+  });
+  const [userPassword, setUserPassword] = useState('');
+
+  const resetFields = () => {
+    setValues({
+      newPassword: '',
+      currentPassword: '',
+      showNewPassword: false,
+      confirmNewPassword: '',
+      showCurrentPassword: false,
+      showConfirmNewPassword: false
+    })
+  };
+
+  const router = useRouter();
+
+  useEffect(() => {
+		const getUser = async () => {
+			const token = localStorage.getItem('token') as string;
+      const response = await getUserRequest(token);
+
+			if (response.user) {
+				const { user: { password } } = response;
+				setUserPassword(password);
+			};
+		};
+
+		getUser();
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
   // Handle Current Password
   const handleCurrentPasswordChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
@@ -67,6 +99,38 @@ const TabSecurity = () => {
   }
   const handleMouseDownConfirmNewPassword = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
+  }
+
+  const saveChanges = async () => {
+    let password: string;
+    const { newPassword, currentPassword, confirmNewPassword } = values;
+    const token = localStorage.getItem('token') as string;
+
+    if (!compareSync(currentPassword, userPassword)) {
+      alert('Current password is incorrect');
+      resetFields();
+
+      return;
+    }
+
+    if (newPassword === confirmNewPassword) {
+      password = newPassword;
+    } else {
+      alert('Passwords do not match');
+
+      return;
+    };
+
+    const response = await editUserRequest(token, { password });
+
+    alert(response.message);
+
+    if (response.status === 200) {
+      localStorage.setItem('token', response.token);
+      router.push('/dashboard');
+    } else {
+      resetFields();
+    };
   }
 
   return (
@@ -165,7 +229,7 @@ const TabSecurity = () => {
 
       <CardContent>
         <Box sx={{ mt: 11 }}>
-          <Button variant='contained' sx={{ marginRight: 3.5 }}>
+          <Button onClick={saveChanges} variant='contained' sx={{ marginRight: 3.5 }}>
             Save Changes
           </Button>
           <Button
