@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { validateLoginFields, validateUserFields } from '../middlewares/validate.middleware';
+import { validateEditUserFields, validateLoginFields, validateUserFields } from '../middlewares/validate.middleware';
 import validateToken from '../middlewares/token.middleware';
 import { isExistsUser } from '../middlewares/login.middleware';
 import { getUser, login, createUser, editUser, getAllUsers } from '../controllers/user.controller';
@@ -9,7 +9,7 @@ const userRouter = Router();
 
 userRouter.route('/')
   .get(validateToken, getUser)
-  .put(validateToken, validateUserFields, editUser)
+  .put(validateToken, validateEditUserFields, editUser)
   .post(validateUserFields, isExistsUser, createUser);
 
 userRouter.post('/login', validateLoginFields, login);

@@ -59,14 +59,19 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
 export const editUser = async (req: Request, res: Response, next: NextFunction) => {
   const { username, email, password } = req.body;
   const { user } = res.locals as { user: User };
+  let hashedPassword: string | undefined;
 
-  const hashedPassword = await hashPassword(password);
+  if (password) {
+    hashedPassword = await hashPassword(password);
+  }
 
-  user.username = username;
-  user.email = email;
-  user.password = hashedPassword;
+  user.username = username ?? user.username;
+  user.email = email ?? user.email;
+  user.password = hashedPassword ?? user.password;
 
   await user.save();
 
-  return res.status(statusCodes.ok).json({ user });
+  const newToken = tokenGenerator(user.email);
+
+  return res.status(statusCodes.ok).json({ user, token: newToken });
 };

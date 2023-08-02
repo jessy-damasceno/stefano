@@ -6,7 +6,7 @@ import { User } from '../database/models/user.model';
 const secret = process.env.JWT_SECRET || 'my_secret';
 
 export default async function validateToken(req: Request, res: Response, next: NextFunction) {
-  const token = req.header('  ');
+  const token = req.header('Authorization');
   if (!token) {
     next({
       type: 'TOKEN_ERROR',
