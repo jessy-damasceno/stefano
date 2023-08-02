@@ -2,6 +2,7 @@ import * as express from 'express';
 import cors from 'cors';
 import errorMiddleware from './middlewares/error.middleware';
 import userRouter from './routes/user.route';
+import contactRouter from './routes/contact.route';
 
 class App {
   public app: express.Express;
@@ -26,7 +27,8 @@ class App {
     this.app.use(accessControl);
     this.app.use(cors());
 
-    this.app.use('/user', userRouter)
+    this.app.use('/user', userRouter);
+    this.app.use('/contact', contactRouter);
 
     this.app.use(errorMiddleware);
   }
