@@ -79,8 +79,8 @@ const LoginPage = () => {
 			const data = localStorage.getItem('user');
 
 			if (data) {
-				const { email, password } = JSON.parse(data);
-				setValues({ ...values, email, password });
+				const { email } = JSON.parse(data);
+				setValues({ ...values, email });
         setDisabled(false);
         setRememberMe(true);
 			};
@@ -123,7 +123,6 @@ const LoginPage = () => {
       if (rememberMe) {
         localStorage.setItem('user', JSON.stringify({
           email: values.email,
-          password: values.password,
         }));
       } else {
         localStorage.removeItem('user');

@@ -123,7 +123,6 @@ const RegisterPage = () => {
     if (response.status === 200) {
       localStorage.setItem('user', JSON.stringify({
         email: values.email,
-        password: values.password,
       }));
       alert(response.message);
       router.push('/');
