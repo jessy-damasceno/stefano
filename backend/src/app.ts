@@ -17,9 +17,9 @@ class App {
 
   private config():void {
     const accessControl: express.RequestHandler = (_req: any, res: { header: (arg0: string, arg1: string) => void; }, next: () => void) => {
-      res.header('Access-Control-Allow-Origin', '*');
-      res.header('Access-Control-Allow-Methods', 'GET,POST,DELETE,OPTIONS,PUT,PATCH');
-      res.header('Access-Control-Allow-Headers', '*');
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Methods", "*");
+      res.header("Access-Control-Allow-Headers", "*");
       next();
     };
 
