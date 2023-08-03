@@ -13,11 +13,15 @@ interface INewContact {
   email: string;
 }
 
-const HOST = process.env.HOST ?? 'http://localhost:3001';
+const HOST = process.env.HOST ?? 'https://3fa0-2804-d47-5ed3-b800-477-104e-ccce-fbdd.ngrok-free.app';
 
 export const getContactsRequest = async (token: string) => {
   const config = {
-    headers: { Authorization: token }
+    headers: { 
+      Authorization: token,
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'application/json',
+    }
   };
 
   const response = await axios.get(
@@ -42,8 +46,13 @@ export const getContactsRequest = async (token: string) => {
 
 export const addNewContact = async (token: string, payload: INewContact) => {
   const { contactName, email } = payload;
+
   const config = {
-    headers: { Authorization: token }
+    headers: { 
+      Authorization: token,
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'application/json',
+    }
   };
 
   const response = await axios.post(
@@ -69,8 +78,13 @@ export const addNewContact = async (token: string, payload: INewContact) => {
 
 export const editContactRequest = async (token: string, id: string | number, payload: INewContact) => {
   const { contactName, email } = payload;
+
   const config = {
-    headers: { Authorization: token }
+    headers: { 
+      Authorization: token,
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'application/json',
+    }
   };
 
   const response = await axios.put(
@@ -96,7 +110,11 @@ export const editContactRequest = async (token: string, id: string | number, pay
 
 export const removeContactRequest = async (token: string, id: string | number) => {
   const config = {
-    headers: { Authorization: token }
+    headers: { 
+      Authorization: token,
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'application/json',
+    }
   };
 
   const response = await axios.delete(
