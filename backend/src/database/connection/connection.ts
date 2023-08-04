@@ -10,7 +10,7 @@ export const connection = new Sequelize({
   password: process.env.MYSQL_PASSWORD ?? '123456',
   database: process.env.MYSQL_DATABASE ?? 'stefano',
   host: process.env.MYSQL_HOST ?? 'localhost',
-  port: Number(process.env.DB_PORT) || 3306,
+  port: Number(process.env.DB_PORT) ?? 3306,
   dialect: 'mysql',
   dialectOptions: {
     timezone: 'Z',
@@ -24,7 +24,7 @@ export const connection = new Sequelize({
 
 async function connectionDB() {
   try {
-    await connection.sync({ force: true});
+    await connection.sync({ force: true });
     await seedUsers();
     await seedContacts();
   } catch (error) {

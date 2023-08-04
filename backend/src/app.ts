@@ -16,16 +16,17 @@ class App {
   }
 
   private config():void {
-    const accessControl: express.RequestHandler = (_req: any, res: { header: (arg0: string, arg1: string) => void; }, next: () => void) => {
-      res.header("Access-Control-Allow-Origin", "*");
-      res.header("Access-Control-Allow-Methods", "*");
-      res.header("Access-Control-Allow-Headers", "*");
-      next();
-    };
+    // const accessControl: express.RequestHandler = (_req: any, res: { header: (arg0: string, arg1: string) => void; }, next: () => void) => {
+    //   res.header("Access-Control-Allow-Origin", "*");
+    //   res.header("Access-Control-Allow-Methods", "*");
+    //   res.header("Access-Control-Allow-Headers", "*");
+    //   next();
+    // };
+
+    this.app.use(cors());
 
     this.app.use(express.json());
-    this.app.use(accessControl);
-    this.app.use(cors());
+
 
     this.app.use('/user', userRouter);
     this.app.use('/contact', contactRouter);

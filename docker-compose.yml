@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  backend:
+    container_name: app_backend
+    build: ./backend
+    restart: always
+    working_dir: /app-backend
+    depends_on:
+      - mysql
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./backend/src:/app-backend/src
+    environment:
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=123456
+      - MYSQL_DATABASE=stefano
+      - MYSQL_HOST=mysql
+      - DB_PORT=3306
+      - APP_PORT=3001
+      - JWT_SECRET=my_secret
+
+  mysql:
+    image: mysql:8.0.32
+    container_name: mysql_80
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=stefano
+    command: mysqld

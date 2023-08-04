@@ -18,14 +18,12 @@ interface IRegister {
   password: string;
 }
 
-const HOST = process.env.HOST ?? 'https://3fa0-2804-d47-5ed3-b800-477-104e-ccce-fbdd.ngrok-free.app';
+const HOST = process.env.HOST ?? 'http://localhost:3001';
 
 export const getUserRequest = async (token: string) => {
   const config = {
     headers: { 
-      Authorization: token,
-      'Access-Control-Allow-Origin': '*',
-      'Content-Type': 'application/json',
+      Authorization: token
     }
   };
 
@@ -98,9 +96,7 @@ export const createUserRequest = async (payload: IRegister) => {
 export const editUserRequest = async (token: string, payload: IUser) => {
   const config = {
     headers: { 
-      Authorization: token,
-      'Access-Control-Allow-Origin': '*',
-      'Content-Type': 'application/json',
+      Authorization: token
     }
   };
 

@@ -71,13 +71,9 @@ const DashboardTable = () => {
       email: values.email
     })
 
-    console.log(response.status)
-
     if (response.status === 201) {
       setContacts([...contacts, response.contact as IContact])
     }
-
-    console.log(contacts)
 
     alert(response.message)
     resetFields()
@@ -121,8 +117,6 @@ const DashboardTable = () => {
     alert(response.message);
     setIsEdit(false);
   };
-
-  console.log(isEdit)
 
   return (
     <Card>

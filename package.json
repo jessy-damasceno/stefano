@@ -1,0 +1,23 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "cd frontend && npm install",
+    "compose:up": "docker-compose up -d --build",
+    "compose:down": "docker-compose down --remove-orphans",
+    "start": "cd frontend && npm run dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jessy-damasceno/stefano.git"
+  },
+  "author": "Jessy Damasceno",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jessy-damasceno/stefano/issues"
+  },
+  "homepage": "https://github.com/jessy-damasceno/stefano#readme"
+}
