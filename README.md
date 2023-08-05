@@ -23,6 +23,6 @@ Aplicação full stack de lista de contatos personalizada por usuário cadastrad
 
 5. Ainda na raiz do projeto, inicie a aplicação (o Next.js informará o entrypoint da aplicação):
 
-       ```sh
+   ```sh
     npm start
     ```
