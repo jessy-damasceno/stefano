@@ -25,4 +25,6 @@ Aplicação full stack de lista de contatos personalizada por usuário cadastrad
 
    ```sh
     npm start
-    ```
+   ```
+
+## Próximas features: Dockerizar o frontend.
